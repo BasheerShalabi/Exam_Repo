@@ -76,7 +76,7 @@ def create_project(request):
             if len(errors) > 0:
                 for key, value in errors.items():
                     messages.error(request, value)
-                return redirect('/create_projet')
+                return redirect('/create_project')
             else:
                 project = Project.create_project(request.POST,request.session['user']['id'])
                 return redirect(f'/project_info/{project.id}')

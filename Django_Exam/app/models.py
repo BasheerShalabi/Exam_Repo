@@ -38,9 +38,9 @@ class ProjectManager(models.Manager):
             errors['startdate'] = "Start date can not be empty"
         if postData['enddate'] == '':
             errors['enddate'] = "End date can not be empty"
-        if datetime.now() > datetime.strptime(postData['startdate'], "%Y-%m-%d"):
+        if not datetime.now().date() <= datetime.strptime(postData['startdate'], "%Y-%m-%d").date():
             errors['startdate'] = "Start Day can not be in the past"
-        if datetime.now() > datetime.strptime(postData['enddate'], "%Y-%m-%d"):
+        if not datetime.now().date() <= datetime.strptime(postData['enddate'], "%Y-%m-%d").date():
             errors['enddate'] = "End Day can not be in the past"
         return errors
 

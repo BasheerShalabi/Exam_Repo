@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Project</title>
+</head>
+<body>
+    <h1>Welcome {{ request.session.user.first_name }} to Developer dashboard</h1>
+    <a href="/logout">Logout</a>
+    <hr>
+    <h1>Edit {{ project.name }}</h1>
+    <form action="/edit_project/{{ project.id }}" method="post">
+        {% csrf_token%}
+        <label for="name">Project Name</label>
+        <input type="text" name="name" value="{{ project.name }}" required>
+        <label for="description">Description</label>
+        <textarea name="description" required>{{ project.description }}</textarea>
+        <label for="startdate">Start Date</label>
+        <input type="date" name="startdate" value='{{ project.startdate|date:"Y-m-d" }}' min='{{ today|date:"Y-m-d" }}' required>
+        <label for="enddate">End Date</label>
+        <input type="date" name="enddate" value='{{ project.enddate|date:"Y-m-d" }}' min='{{ today|date:"Y-m-d" }}' required>
+        <input type="submit" value="Edit">
+    </form>
+    {% if messages %}
+<ul class="messages">    
+    {% for message in messages %}    
+        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>    
+    {% endfor %}
+</ul>
+{% endif %}
+    <a href="/dashboard">Back</a>
+    <form action="/delete_project" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="project_id" value="{{ project.id}}">
+        <input type="submit" value="Delete">
+    </form>
+</body>
+</html>

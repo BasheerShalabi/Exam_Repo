@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <h1>Welcome {{ request.session.user.first_name }} to Developer dashboard</h1>
+    <a href="/logout">Logout</a>
+    <hr>
+    <a href="/create_project">Create Project +</a>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Project Name</th>
+            <th>Project Owner</th>
+            <th>Actions</th>
+        </tr>
+        {% for project in projects %}
+        <tr>
+            <td>{{ project.id }}</td>
+            <td><a href="/project_info/{{ project.id }}">{{ project.name }}</a></td>
+            <td>{{ project.owner.first_name }} {{ project.owner.last_name }}</td>
+            <td>
+                {% if user.id is project.owner.id %}
+                <form action="/delete_project" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="project_id" value="{{ project.id }}">
+                    <input type="submit" value="Delete">
+                </form>
+                {% elif user in project.collaborators.all %}
+                <form action="/leave_project" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="project_id" value="{{ project.id }}">
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                    <input type="submit" value="Seperate">
+                </form>
+                {% else %}
+                <form action="/join_project" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="project_id" value="{{ project.id }}">
+                    <input type="submit" value="Join">
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor%}
+    </table>
+</body>
+
+</html>

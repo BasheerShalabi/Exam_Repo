@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Creation</title>
+</head>
+<body>
+    <h1>Welcome {{ request.session.user.first_name }} to Developer dashboard</h1>
+    <a href="/logout">Log Out</a>
+    <hr>
+    <h1>Create Project</h1>
+    <form action="/create_project" method="post">
+        {% csrf_token%}
+        <label for="name">Project Name</label>
+        <input type="text" name="name" required>
+        <label for="description">Description</label>
+        <textarea name="description" required></textarea>
+        <label for="startdate">Start Date</label>
+        <input type="date" name="startdate" min='{{ today|date:"Y-m-d" }}' required>
+        <label for="enddate">End Date</label>
+        <input type="date" name="enddate" min='{{ today|date:"Y-m-d" }}' required>
+        <input type="submit" value="Create">
+    </form>
+    {% if messages %}
+<ul class="messages">    
+    {% for message in messages %}    
+        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>    
+    {% endfor %}
+</ul>
+{% endif %}
+    <a href="/dashboard">Back</a>
+</body>
+</html>
